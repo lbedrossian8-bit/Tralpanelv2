@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tralpanel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0000ff 0%, #00d4ff 50%, #00ff88 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: linear-gradient(135deg, #0066cc 0%, #00cccc 50%, #00ff99 100%);
+            border: 3px solid #000;
+            padding: 40px;
+            width: 90%;
+            max-width: 1400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 40px;
+            color: #000;
+        }
+
+        .form-box {
+            background: linear-gradient(135deg, #0088cc 0%, #00ccbb 100%);
+            border: 3px solid #000;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 24px;
+            color: #000;
+            width: 100px;
+            font-weight: bold;
+        }
+
+        input {
+            flex: 1;
+            padding: 15px;
+            font-size: 20px;
+            border: 2px solid #000;
+            background: #00aacc;
+            color: #000;
+        }
+
+        input:focus {
+            outline: none;
+            background: #00ccdd;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            border: 2px solid #000;
+            background: #00ff99;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #00dd88;
+            transform: translateY(-2px);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 64px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .globe {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #0066ff;
+            border: 4px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #fff;
+        }
+
+        .user-info {
+            font-size: 18px;
+            color: #000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 3px solid #000;
+        }
+
+        th, td {
+            border: 2px solid #000;
+            padding: 20px;
+            text-align: left;
+            background: #0088cc;
+            color: #000;
+            font-size: 18px;
+        }
+
+        th {
+            background: #0066aa;
+            font-weight: bold;
+        }
+
+        .note-column {
+            background: #00ff99;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #ff4444;
+            color: #fff;
+            border: 2px solid #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #dd3333;
+        }
+
+        .admin-panel {
+            background: linear-gradient(135deg, #0088cc 0%, #00ccbb 100%);
+            border: 3px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .admin-panel h2 {
+            margin-bottom: 15px;
+            color: #000;
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .admin-controls input {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #000;
+            background: #00aacc;
+        }
+
+        .admin-controls button {
+            padding: 8px 15px;
+            background: #00ff99;
+            border: 2px solid #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .admin-controls button:hover {
+            background: #00dd88;
+        }
+
+        .user-list {
+            background: #0066aa;
+            border: 2px solid #000;
+            padding: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 5px;
+            background: #0088cc;
+            border: 1px solid #000;
+        }
+
+        .user-item button {
+            padding: 5px 10px;
+            background: #ff4444;
+            color: #fff;
+            border: 1px solid #000;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .user-item button:hover {
+            background: #dd3333;
+        }
+
+        .message {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #000;
+            display: none;
+        }
+
+        .message.success {
+            background: #00ff99;
+            color: #000;
+        }
+
+        .message.error {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .all-users-list {
+            background: #0066aa;
+            border: 2px solid #000;
+            padding: 10px;
+            margin-top: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .all-users-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 5px;
+            background: #0088cc;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Page de connexion -->
+        <div id="loginPage">
+            <h1>login to Tralpanel</h1>
+            
+            <div class="message" id="message"></div>
+            
+            <div class="form-box">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="loginNom" placeholder="Votre nom">
+                </div>
+                <div class="form-group">
+                    <label>MDP</label>
+                    <input type="password" id="loginMdp" placeholder="Mot de passe">
+                </div>
+                <div class="button-group">
+                    <button onclick="login()">Se connecter</button>
+                    <button onclick="showCreateAccount()">Créer un compte</button>
+                </div>
+            </div>
+            
+            <div class="logo">tralpanel</div>
+        </div>
+
+        <!-- Page de création de compte -->
+        <div id="createPage" style="display: none;">
+            <h1>Créer un compte</h1>
+            
+            <div class="message" id="createMessage"></div>
+            
+            <div class="form-box">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="createNom" placeholder="Votre nom">
+                </div>
+                <div class="form-group">
+                    <label>MDP</label>
+                    <input type="password" id="createMdp" placeholder="Mot de passe">
+                </div>
+                <div class="button-group">
+                    <button onclick="createAccount()">Créer</button>
+                    <button onclick="showLogin()">Retour</button>
+                </div>
+            </div>
+            
+            <div class="logo">tralpanel</div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div class="header">
+                <div class="header-left">
+                    <div class="globe">🌐</div>
+                    <div class="logo">tralpanel</div>
+                </div>
+                <div>
+                    <div class="user-info">connecté en tant que : <strong id="currentUser"></strong></div>
+                    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+                </div>
+            </div>
+
+            <!-- Panneau Admin -->
+            <div id="adminPanel" class="admin-panel" style="display: none;">
+                <h2>🔧 Panneau Administrateur - Gestion des droits d'écriture</h2>
+                
+                <div class="all-users-list" id="allUsersList">
+                    <strong>Tous les utilisateurs enregistrés :</strong>
+                </div>
+                
+                <div class="admin-controls" style="margin-top: 15px;">
+                    <input type="text" id="userToAdd" placeholder="Nom d'utilisateur à autoriser">
+                    <button onclick="addWritePermission()">✓ Autoriser</button>
+                </div>
+                
+                <div class="user-list" id="authorizedUsersList">
+                    <strong>Utilisateurs autorisés à écrire :</strong>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>nom rp</th>
+                        <th>steam id 32</th>
+                        <th>steam id 64</th>
+                        <th>id discord</th>
+                        <th>raison</th>
+                        <th class="note-column">nom de personne qui note</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                        <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                        <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                        <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                        <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                        <td class="note-column"><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; background: #00ff99; padding: 12px; font-size: 16px;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="addRowBtn" onclick="addRow()" style="margin-top: 10px; width: 100%;">Ajouter une ligne</button>
+        </div>
+    </div>
+
+    <script>
+        // Charger les données sauvegardées ou utiliser les valeurs par défaut
+        let users = JSON.parse(localStorage.getItem('tralpanel_users')) || {
+            'Tralnox': 'tralnox0810112@211'
+        };
+        let admins = JSON.parse(localStorage.getItem('tralpanel_admins')) || ['Tralnox'];
+        let authorizedWriters = JSON.parse(localStorage.getItem('tralpanel_writers')) || ['Tralnox'];
+        let currentUser = null;
+        let isAdmin = false;
+
+        // Sauvegarder les données
+        function saveData() {
+            localStorage.setItem('tralpanel_users', JSON.stringify(users));
+            localStorage.setItem('tralpanel_admins', JSON.stringify(admins));
+            localStorage.setItem('tralpanel_writers', JSON.stringify(authorizedWriters));
+        }
+
+        function showMessage(elementId, text, type) {
+            const msg = document.getElementById(elementId);
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('createPage').style.display = 'none';
+            document.getElementById('dashboard').classList.remove('active');
+        }
+
+        function showCreateAccount() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('createPage').style.display = 'block';
+            document.getElementById('dashboard').classList.remove('active');
+        }
+
+        function createAccount() {
+            const nom = document.getElementById('createNom').value.trim();
+            const mdp = document.getElementById('createMdp').value;
+
+            if (!nom || !mdp) {
+                showMessage('createMessage', 'Veuillez remplir tous les champs', 'error');
+                return;
+            }
+
+            if (users[nom]) {
+                showMessage('createMessage', 'Ce nom existe déjà', 'error');
+                return;
+            }
+
+            users[nom] = mdp;
+            saveData();
+            showMessage('createMessage', 'Compte créé avec succès !', 'success');
+            
+            setTimeout(() => {
+                document.getElementById('createNom').value = '';
+                document.getElementById('createMdp').value = '';
+                showLogin();
+            }, 1500);
+        }
+
+        function login() {
+            const nom = document.getElementById('loginNom').value.trim();
+            const mdp = document.getElementById('loginMdp').value;
+
+            if (!nom || !mdp) {
+                showMessage('message', 'Veuillez remplir tous les champs', 'error');
+                return;
+            }
+
+            if (!users[nom]) {
+                showMessage('message', 'Utilisateur introuvable', 'error');
+                return;
+            }
+
+            if (users[nom] !== mdp) {
+                showMessage('message', 'Mot de passe incorrect', 'error');
+                return;
+            }
+
+            currentUser = nom;
+            isAdmin = admins.includes(nom);
+            document.getElementById('currentUser').textContent = nom + (isAdmin ? ' (Admin)' : '');
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            
+            if (isAdmin) {
+                document.getElementById('adminPanel').style.display = 'block';
+                updateAllUsersList();
+                updateAuthorizedUsersList();
+            }
+            
+            updateWritePermissions();
+        }
+
+        function updateWritePermissions() {
+            const canWrite = authorizedWriters.includes(currentUser) || isAdmin;
+            const inputs = document.querySelectorAll('.table-input');
+            const addBtn = document.getElementById('addRowBtn');
+            
+            inputs.forEach(input => {
+                input.disabled = !canWrite;
+                input.style.cursor = canWrite ? 'text' : 'not-allowed';
+                input.style.background = canWrite ? input.parentElement.classList.contains('note-column') ? '#00ff99' : '#0088cc' : '#666666';
+            });
+            
+            addBtn.disabled = !canWrite;
+            addBtn.style.cursor = canWrite ? 'pointer' : 'not-allowed';
+            addBtn.style.background = canWrite ? '#00ff99' : '#666666';
+        }
+
+        function updateAllUsersList() {
+            const list = document.getElementById('allUsersList');
+            list.innerHTML = '<strong>Tous les utilisateurs enregistrés :</strong>';
+            
+            Object.keys(users).forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'all-users-item';
+                const hasWriteAccess = authorizedWriters.includes(user);
+                userItem.innerHTML = `
+                    <span>${user}${admins.includes(user) ? ' (Admin)' : ''}${hasWriteAccess ? ' ✓' : ''}</span>
+                `;
+                list.appendChild(userItem);
+            });
+        }
+
+        function addWritePermission() {
+            const username = document.getElementById('userToAdd').value.trim();
+            
+            if (!username) {
+                alert('Veuillez entrer un nom d\'utilisateur');
+                return;
+            }
+            
+            if (!users[username]) {
+                alert('Cet utilisateur n\'existe pas. Utilisateurs disponibles: ' + Object.keys(users).join(', '));
+                return;
+            }
+            
+            if (authorizedWriters.includes(username)) {
+                alert('Cet utilisateur a déjà les droits d\'écriture');
+                return;
+            }
+            
+            authorizedWriters.push(username);
+            saveData();
+            document.getElementById('userToAdd').value = '';
+            updateAllUsersList();
+            updateAuthorizedUsersList();
+            alert('Droits d\'écriture accordés à ' + username);
+        }
+
+        function removeWritePermission(username) {
+            if (username === 'Tralnox') {
+                alert('Impossible de retirer les droits de l\'administrateur principal');
+                return;
+            }
+            
+            const index = authorizedWriters.indexOf(username);
+            if (index > -1) {
+                authorizedWriters.splice(index, 1);
+                saveData();
+                updateAllUsersList();
+                updateAuthorizedUsersList();
+                alert('Droits d\'écriture retirés à ' + username);
+            }
+        }
+
+        function updateAuthorizedUsersList() {
+            const list = document.getElementById('authorizedUsersList');
+            list.innerHTML = '<strong>Utilisateurs autorisés à écrire :</strong>';
+            
+            authorizedWriters.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <span>${user}${user === 'Tralnox' ? ' (Admin)' : ''}</span>
+                    ${user !== 'Tralnox' ? `<button onclick="removeWritePermission('${user}')">✕ Retirer</button>` : ''}
+                `;
+                list.appendChild(userItem);
+            });
+        }
+
+        function logout() {
+            currentUser = null;
+            isAdmin = false;
+            document.getElementById('loginNom').value = '';
+            document.getElementById('loginMdp').value = '';
+            showLogin();
+        }
+
+        function addRow() {
+            const canWrite = authorizedWriters.includes(currentUser) || isAdmin;
+            if (!canWrite) {
+                alert('Vous n\'avez pas les droits pour ajouter des lignes');
+                return;
+            }
+            
+            const tbody = document.getElementById('tableBody');
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                <td><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; padding: 12px; font-size: 16px;"></td>
+                <td class="note-column"><input type="text" class="table-input" style="width: 100%; border: 1px solid #000; background: #00ff99; padding: 12px; font-size: 16px;"></td>
+            `;
+            updateWritePermissions();
+        }
+    </script>
+</body>
+</html>
